@@ -40,14 +40,6 @@ public:
 		return mgnt;
 	}
 
-	virtual void printCoinInfo() const { //개발중 동전 정보를 출력하기 위함, 삭제예정
-		cout << "동전 정보:" << endl;
-		for (int i = 0; i < 8; i++) {
-			cout << "P" << i << ":" << p[i] << " ";
-		}
-		cout << "\n자성: " << mgnt << endl;
-	}
-
 	virtual int getMrgErP(int idx) const { //각 동전의 오차값을 반환
 		return 0;
 	}
@@ -279,7 +271,6 @@ int main() { //메인함수
 	{
 		cout << "동전을 투입해주세요\n" << endl;
 		InsCns insCns;
-		insCns.printCoinInfo();
 
 		if (compareCoins(insCns, coin10)) {
 			cnt10++;
