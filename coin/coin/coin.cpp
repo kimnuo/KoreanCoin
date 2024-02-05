@@ -3,12 +3,16 @@
 //변수 mgnt은 magnetic, 동전의 자성을 뜻합니다.
 //구조체 insCns 은 Inserted Coin, 넣어진 동전을 뜻합니다.
 //함수gtvI는  Get Value By Index, 요소에 값을 입력 받고 되돌려주는 함수를 뜻합니다.
-//Error1은 규격 미도달, Error02는 국내주화가 아닌경우 발생합니다
+//Error1은 규격 미도달, Error02는 국내주화가 아닌경우 발생합니다.
 //mrgEr_pN와 moe 는 margin of error로 오차범위를 뜻합니다.
-//abs함수로 고정값 지정
+//tPrice는 Ticket Price로 티켓의 가격입니다.
+//tType은 Ticket Type로 1~3까지 있으며 1은 일회용 승차권 2는 우대권 3은 교통카드 충전입니다.
+//OTicket은 One Time Ticket으로 일회용 승차권입니다.
+//gttp은 Get Ticket Price로 승차권의 가격을 입력받습니다.
+//slcTicket은 selected Ticket으로 선택된 승차권 종류를 뜻합니다.
 
-#include <iostream>
-#include <cmath>
+#include "iostream"
+#include "cmath"
 using namespace std;
 
 class Coin { //Coin 클래스 각 권종의 속성을 선언
@@ -155,12 +159,90 @@ private:
 	}
 };
 
+class Ticket // 승차권 클래스
+{
+protected:
+	int tPrice, tType, targetAmount;
+
+public:
+	Ticket(int tType) : tType(tType)
+	{
+	}
+	int getTargetAmount() const
+	{
+		return targetAmount;
+	}
+};
+
+class OTicket : public Ticket
+{
+public:
+	OTicket() : Ticket(1)
+	{
+		cout << "일회용 승차권 발매중입니다." << endl;
+		cout << "승차권의 금액을 입력해주세요: ";
+		gttp();
+		cout << "\n투입하실 금액은 : " << tPrice << "원 입니다\n" << endl;
+		targetAmount = tPrice;
+	}
+	int getTargetAmount() const
+	{
+		return targetAmount;
+	}
+private:
+	void gttp()
+	{
+		cin >> tPrice;
+	}
+};
+
+class PreTicket : public Ticket
+{
+public:
+	PreTicket() : Ticket(2)
+	{
+		tPrice = 500;
+		cout << "우대승차권 발매중입니다." << endl;
+		cout << "신분증을 인식기에 인식시켜주세요\n" << endl;
+		cout << "투입하실 금액은 : " << tPrice << "원 입니다\n"<<endl;
+		targetAmount = tPrice;
+	}
+	int getTargetAmount() const
+	{
+		return targetAmount;
+	}
+};
+
+class ChargeTicket : public Ticket
+{
+public:
+	ChargeTicket() : Ticket(3)
+	{
+		cout << "교통카드 충전중입니다." << endl;
+		cout << "충전하실 금액을 입력해주세요";
+		gttp();
+		cout << "교통카드를 올려주세요\n"<<endl;
+		cout << "투입하실 금액은 : " << tPrice << "원 입니다\n" << endl;
+		targetAmount = tPrice;
+	}
+	int getTargetAmount() const
+	{
+		return targetAmount;
+	}
+private:
+	void gttp()
+	{
+		cin >> tPrice;
+	}
+};
+
+
 bool compareCoins(const InsCns& insertedCoin, const Coin& standardCoin) {
-	int moe = 0; //각 항목과 비교할 오차범위변수
+	int moe = 0; //각 항목과 비교할 오차범위
 	for (int i = 0; i < 8; ++i) {
-		moe = abs(insertedCoin.getP(i) - standardCoin.getP(i)); //오차범위 변수 초기화
-		cout << i << "번P " << moe<< ", " << endl;
-		if (moe >= standardCoin.getMrgErP(i) ) { //오차범위가 지정된 오차범위 값이 넘으면 false를 반환
+		moe = abs(insertedCoin.getP(i) - standardCoin.getP(i)); //오차범위 초기화
+		cout << i << "번 P " << moe<< ", " << endl;
+		if (moe >= standardCoin.getMrgErP(i) ) { //오차범위가 지정된 오차범위 값을 넘으면 false를 반환
 			return false;
 		}
 	}
@@ -173,32 +255,33 @@ int main() { //메인함수
 	Coin100 coin100;
 	Coin500 coin500;
 	
-	int cnt10 = 0, cnt50 = 0, cnt100 = 0, cnt500 = 0, mNum = 0, price=0, total;
+	int cnt10 = 0, cnt50 = 0, cnt100 = 0, cnt500 = 0, mNum = 0, price=0, total, targetAmount;
 	
+	Ticket *slcTicket = nullptr;
 
 	cout << "메뉴를 선택 해주세요" << "\n1.일회용 승차권 2.우대용 3.교통카드 충전" << "\n-----------------------------------------" << endl;
 	cin >> mNum;
-	switch (mNum)
+	if (mNum == 1)
 	{
-	case 1:
-		cout << "1,800원 입니다. 동전을 투입해주세요"<<endl;
-		break;
-	case 2:
-		cout << "100원 입니다. 동전을 투입해주세요"<< endl;
-		break;
-	case 3:
-		cout << "충전 할 금액을 입력해주세요." << endl;
-		cin >> price;
-		cout <<"충전 할 금액은 "<<price<<"원 입니다.\n"<<"동전을 투입해주세요" << endl;
-		break;
-	default:
-		break;
+		OTicket oTicket;
+		slcTicket = &oTicket;
 	}
+	else if (mNum == 2)
+	{
+		PreTicket preTicket;
+		slcTicket = &preTicket;
+	}
+	else if (mNum == 3)
+	{
+		ChargeTicket chargeTicket;
+		slcTicket = &chargeTicket;
+	}
+	targetAmount = slcTicket->getTargetAmount();
 
 	while (true) // 주화 판별 함수를 호출하여 유효한 동전으로 판별되었을 경우, (추후 목표값 달성시까지) 동전 반환 및 프로그램 종료
 	{
 		InsCns insCns;
-		cout << "동전을 투입하세요" << endl;
+		cout << "동전을 투입해주세요" << endl;
 		insCns.printCoinInfo();
 
 		if (compareCoins(insCns, coin10)) {
