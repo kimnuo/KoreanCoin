@@ -182,7 +182,6 @@ public:
 		cout << "일회용 승차권 발매중입니다." << endl;
 		cout << "승차권의 금액을 입력해주세요: ";
 		gttp();
-		cout << "\n투입하실 금액은 : " << tPrice << "원 입니다\n" << endl;
 		targetAmount = tPrice;
 	}
 	int getTargetAmount() const
@@ -204,7 +203,6 @@ public:
 		tPrice = 500;
 		cout << "우대승차권 발매중입니다." << endl;
 		cout << "신분증을 인식기에 인식시켜주세요\n" << endl;
-		cout << "투입하실 금액은 : " << tPrice << "원 입니다\n"<<endl;
 		targetAmount = tPrice;
 	}
 	int getTargetAmount() const
@@ -222,7 +220,6 @@ public:
 		cout << "충전하실 금액을 입력해주세요";
 		gttp();
 		cout << "교통카드를 올려주세요\n"<<endl;
-		cout << "투입하실 금액은 : " << tPrice << "원 입니다\n" << endl;
 		targetAmount = tPrice;
 	}
 	int getTargetAmount() const
@@ -255,7 +252,7 @@ int main() { //메인함수
 	Coin100 coin100;
 	Coin500 coin500;
 	
-	int cnt10 = 0, cnt50 = 0, cnt100 = 0, cnt500 = 0, mNum = 0, price=0, total, targetAmount;
+	int cnt10 = 0, cnt50 = 0, cnt100 = 0, cnt500 = 0, mNum = 0, price=0, total=0, targetAmount;
 	
 	Ticket *slcTicket = nullptr;
 
@@ -277,36 +274,43 @@ int main() { //메인함수
 		slcTicket = &chargeTicket;
 	}
 	targetAmount = slcTicket->getTargetAmount();
-
+	cout << "총 금액 : " << targetAmount << "원\n" << endl;
 	while (true) // 주화 판별 함수를 호출하여 유효한 동전으로 판별되었을 경우, (추후 목표값 달성시까지) 동전 반환 및 프로그램 종료
 	{
+		cout << "동전을 투입해주세요\n" << endl;
 		InsCns insCns;
-		cout << "동전을 투입해주세요" << endl;
 		insCns.printCoinInfo();
 
 		if (compareCoins(insCns, coin10)) {
 			cnt10++;
+			total += 10;
 			cout << "10원, count " << cnt10 << "개" << endl;
 		}
 		else if (compareCoins(insCns, coin50)) {
 			cnt50++;
+			total += 50;
 			cout << "50원, count " << cnt50 << "개" << endl;
 		}
 		else if (compareCoins(insCns, coin100)) {
 			cnt100++;
+			total += 100;
 			cout << "100원, count " << cnt100 << "개" << endl;
 		}
 		else if (compareCoins(insCns, coin500)) {
 			cnt500++;
+			total += 500;
 			cout << "500원, count " << cnt500 << "개" << endl;
 		}
 		else {
 			cout << "동전이 반환되었습니다." << endl;
 		}
 
-		// 총액을 업데이트
-		total = (cnt10 * 10) + (cnt50 * 50) + (cnt100 * 100) + (cnt500 * 500);
-		cout << "현재 투입금액: " << total << "원" << endl;
+		cout << "투입하신 금액 : " << total << "원\n" << "투입하실 금액 : " << targetAmount - total << "원\n\n" << endl;
+		if (targetAmount-total == 0)
+		{
+			cout << "발권이 완료되었습니다.";
+			break;
+		}
 	}
 	return 0;
 }
