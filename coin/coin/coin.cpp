@@ -50,7 +50,7 @@ private:
 	int mrgEr_p[8];
 
 public:
-	Coin10() : Coin(127, 107, 94, 55, 46, 58, 111, 86, 0) {
+	Coin10() : Coin(128, 107, 94, 56, 47, 57, 111, 86, 0) {
 		mrgEr_p[0] = abs(3);
 		mrgEr_p[1] = abs(3);
 		mrgEr_p[2] = abs(2);
@@ -71,15 +71,15 @@ private:
 	int mrgEr_p[8];
 
 public:
-	Coin50() : Coin(116, 116, 88, 56, 35, 66, 103, 89, 0) {
+	Coin50() : Coin(116, 116, 88, 57, 36, 66, 104, 90, 0) {
 		mrgEr_p[0] = abs(4);
-		mrgEr_p[1] = abs(4);
-		mrgEr_p[2] = abs(4);
-		mrgEr_p[3] = abs(4);
+		mrgEr_p[1] = abs(5);
+		mrgEr_p[2] = abs(3);
+		mrgEr_p[3] = abs(3);
 		mrgEr_p[4] = abs(4);
-		mrgEr_p[5] = abs(3);
+		mrgEr_p[5] = abs(5);
 		mrgEr_p[6] = abs(3);
-		mrgEr_p[7] = abs(3);
+		mrgEr_p[7] = abs(2);
 	}
 
 	int getMrgErP(int idx) const override {
@@ -92,15 +92,15 @@ private:
 	int mrgEr_p[8];
 
 public:
-	Coin100() : Coin(110, 167, 97, 77, 29, 116, 99, 120, 0) {
+	Coin100() : Coin(111, 167, 97, 78, 30, 116, 100, 121, 0) {
 		mrgEr_p[0] = abs(3);
-		mrgEr_p[1] = abs(3);
+		mrgEr_p[1] = abs(8);
 		mrgEr_p[2] = abs(3);
-		mrgEr_p[3] = abs(15);
-		mrgEr_p[4] = abs(4);
-		mrgEr_p[5] = abs(4);
-		mrgEr_p[6] = abs(3);
-		mrgEr_p[7] = abs(3);
+		mrgEr_p[3] = abs(20);
+		mrgEr_p[4] = abs(3);
+		mrgEr_p[5] = abs(6);
+		mrgEr_p[6] = abs(2);
+		mrgEr_p[7] = abs(4);
 	}
 
 	int getMrgErP(int idx) const override {
@@ -113,11 +113,11 @@ private:
 	int mrgEr_p[8];
 
 public:
-	Coin500() : Coin(122, 190, 118, 133, 40, 140, 108, 144, 0) {
-		mrgEr_p[0] = abs(3);
-		mrgEr_p[1] = abs(3);
-		mrgEr_p[2] = abs(5);
-		mrgEr_p[3] = abs(11);
+	Coin500() : Coin(123, 190, 119, 134, 41, 140, 109, 145, 0) {
+		mrgEr_p[0] = abs(2);
+		mrgEr_p[1] = abs(2);
+		mrgEr_p[2] = abs(4);
+		mrgEr_p[3] = abs(20);
 		mrgEr_p[4] = abs(4);
 		mrgEr_p[5] = abs(3);
 		mrgEr_p[6] = abs(3);
@@ -231,7 +231,7 @@ bool compareCoins(const InsCns& insertedCoin, const Coin& standardCoin) {
 	for (int i = 0; i < 8; ++i) {
 		moe = abs(insertedCoin.getP(i) - standardCoin.getP(i)); //오차범위 초기화
 		cout << i << "번 P " << moe<< ", " << endl;
-		if (moe >= standardCoin.getMrgErP(i) ) { //오차범위가 지정된 오차범위 값을 넘으면 false를 반환
+		if (moe > standardCoin.getMrgErP(i) ) { //오차범위가 지정된 오차범위 값을 넘으면 false를 반환
 			return false;
 		}
 	}
